@@ -36,6 +36,8 @@ public class ConfigManager  {
         config.addDefault(path + "plantBending", true);
         config.addDefault(path + "Damage", 1);
         config.addDefault(path + "Speed", 2.0);
+        config.addDefault(path + "Color", "#f6f6db");
+        config.addDefault(path + "sourceRange", 6);
 
 
         config.options().copyDefaults(true);

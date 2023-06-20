@@ -33,7 +33,8 @@ public final class GlacialShards extends IceAbility implements AddonAbility {
     private static final double range = ConfigManager.getConfig().getDouble("Abilities.Ice.GlacialShards.Range");
     private static final double damage = ConfigManager.getConfig().getDouble("Abilities.Ice.GlacialShards.Damage");
     private static final double speed = ConfigManager.getConfig().getDouble("Abilities.Ice.GlacialShards.Speed");
-
+    private static final String color = ConfigManager.getConfig().getString("Abilities.Ice.GlacialShards.Color");
+    private static final double sourceRange = ConfigManager.getConfig().getDouble("Abilities.Ice.GlacialShards.sourceRange");
     private static Player static_player;
     static ArmorStand[] armorStands;
     static int currentArmorStandIndex;
@@ -52,7 +53,7 @@ public final class GlacialShards extends IceAbility implements AddonAbility {
             return;
         }
 
-        Block water_source = getWaterSourceBlock(player, 5, plantBending);
+        Block water_source = getWaterSourceBlock(player, sourceRange, plantBending);
         if (water_source != null) {
             player.getWorld().playSound(player.getLocation(), Sound.BLOCK_SNOW_BREAK, 4, 3);
             static_player = player;
@@ -106,7 +107,7 @@ public final class GlacialShards extends IceAbility implements AddonAbility {
         ArmorStand armorStand = armorStands[currentArmorStandIndex];
         Location eyeLocation = static_player.getEyeLocation();
         Vector direction = eyeLocation.getDirection();
-        Vector velocity = direction.clone().normalize().multiply(2);
+        Vector velocity = direction.clone().normalize().multiply(speed);
         armorStands[currentArmorStandIndex] = null;
         armorStand.setInvulnerable(true);
         armorStand.setCollidable(true);
@@ -182,7 +183,10 @@ public final class GlacialShards extends IceAbility implements AddonAbility {
             Location particleLocation = location.clone().add(x * 1.5, 1, z * 1.5);
             if (ThreadLocalRandom.current().nextInt(10) == 0) {
                 player.getWorld().spawnParticle(Particle.SNOW_SHOVEL, particleLocation, 2, .1, .1, .1);
-                GeneralMethods.displayColoredParticle("#f6f6db", particleLocation, 1, .2, .2, .2);
+                if (color != null) {
+                    GeneralMethods.displayColoredParticle(color, particleLocation, 1, .2, .2, .2);
+                }else System.out.println("Please add a hex colour to the config.yml");
+
             }
         }
 
