@@ -11,6 +11,6 @@ Config Rundown:
 - plantBending = if the move can be sourced from a plant block, e.g leaves and grass
 - Damage = how much damage the hit entities will recieve
 - Speed = the speed at which the glacial shards travel
-- Color = the color of the particles which surround the player (not including the snow particles)
+- Color = the color of the particles which surround the player -not including the snow particles - this should be in hex format, e.g #f6f6db
 - sourceRange = the range at which the player can source the move
   
