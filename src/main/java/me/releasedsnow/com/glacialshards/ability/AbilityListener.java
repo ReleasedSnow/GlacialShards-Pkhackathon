@@ -21,6 +21,8 @@ public class AbilityListener implements Listener {
 
             if (bendingPlayer.canBend(CoreAbility.getAbility(GlacialShards.class)) && !CoreAbility.hasAbility(player, GlacialShards.class)) {
                 new GlacialShards(player);
+            }else if (bendingPlayer.canBend(CoreAbility.getAbility(IceDisc.class)) && !CoreAbility.hasAbility(player, IceDisc.class)) {
+                new IceDisc(player);
             }
         }
     }
@@ -29,9 +31,16 @@ public class AbilityListener implements Listener {
     public void onClick(PlayerInteractEvent e) {
         if (e.getAction() != Action.LEFT_CLICK_AIR && e.getAction() != Action.LEFT_CLICK_BLOCK) return;
         Player player = e.getPlayer();
-        BendingPlayer bendingPlayer = BendingPlayer.getBendingPlayer(player);
-        if (bendingPlayer.canBend(CoreAbility.getAbility(GlacialShards.class))) {
-            GlacialShards.throwNextArmorStand(bendingPlayer);
+        if (e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+            IceDisc iceDisc = CoreAbility.getAbility(player, IceDisc.class);
+                if (iceDisc != null) {
+                    iceDisc.onClick(e.getClickedBlock());
+                }
+            }
+            GlacialShards glacialShards = CoreAbility.getAbility(player, GlacialShards.class);
+            if (glacialShards != null) {
+                glacialShards.throwNextArmorStand();
+            }
         }
     }
-}
+

@@ -1,6 +1,5 @@
 package me.releasedsnow.com.glacialshards.ability;
 
-import com.projectkorra.projectkorra.BendingPlayer;
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ProjectKorra;
 import com.projectkorra.projectkorra.ability.AddonAbility;
@@ -35,10 +34,11 @@ public final class GlacialShards extends IceAbility implements AddonAbility {
     private static final double speed = ConfigManager.getConfig().getDouble("Abilities.Ice.GlacialShards.Speed");
     private static final String color = ConfigManager.getConfig().getString("Abilities.Ice.GlacialShards.Color");
     private static final double sourceRange = ConfigManager.getConfig().getDouble("Abilities.Ice.GlacialShards.sourceRange");
-    private static Player static_player;
-    static ArmorStand[] armorStands;
-    static int currentArmorStandIndex;
-    static Set<Entity> damagedentities = new HashSet<>();
+
+    ArmorStand[] armorStands;
+    int currentArmorStandIndex;
+    Set<Entity> damagedentities = new HashSet<>();
+    HashMap<Player, ArmorStand[]> armorStandPlayerHashMap = new HashMap<>();
     double angle;
 
 
@@ -56,7 +56,6 @@ public final class GlacialShards extends IceAbility implements AddonAbility {
         Block water_source = getWaterSourceBlock(player, sourceRange, plantBending);
         if (water_source != null) {
             player.getWorld().playSound(player.getLocation(), Sound.BLOCK_SNOW_BREAK, 4, 3);
-            static_player = player;
             this.angle = 0.0;
             armorStands = new ArmorStand[3];
             currentArmorStandIndex = 0;
@@ -88,32 +87,35 @@ public final class GlacialShards extends IceAbility implements AddonAbility {
             armorStand.setRemoveWhenFarAway(false);
 
             armorStands[i] = armorStand;
+            armorStandPlayerHashMap.put(player, armorStands);
         }
     }
 
-    public static void setIce() {
-        Location location = static_player.getLocation().subtract(0, 1, 0);
+    public void setIce() {
+        Location location =player.getLocation().subtract(0, 1, 0);
         for (Block iceblock : GeneralMethods.getBlocksAroundPoint(location, 5)) {
             if (!iceblock.getType().isAir()) {
                 new TempBlock(iceblock, Material.FROSTED_ICE.createBlockData(), 8000);
             }
 
         }
+
+
     }
-    public static void throwNextArmorStand(BendingPlayer bendingPlayer) {
+    public void throwNextArmorStand() {
 
         damagedentities.clear();
 
-        ArmorStand armorStand = armorStands[currentArmorStandIndex];
-        Location eyeLocation = static_player.getEyeLocation();
+        ArmorStand[] armorStands1 = armorStandPlayerHashMap.get(player);
+        ArmorStand armorStand = armorStands1[currentArmorStandIndex];
+        Location eyeLocation = player.getEyeLocation();
         Vector direction = eyeLocation.getDirection();
         Vector velocity = direction.clone().normalize().multiply(speed);
         armorStands[currentArmorStandIndex] = null;
-        armorStand.setInvulnerable(true);
         armorStand.setCollidable(true);
         armorStand.setGravity(true);
         armorStand.teleport(eyeLocation);
-        static_player.getWorld().playSound(eyeLocation, Sound.BLOCK_GLASS_BREAK, 3, 3);
+        player.getWorld().playSound(eyeLocation, Sound.BLOCK_GLASS_BREAK, 3, 3);
 
         BukkitRunnable task = new BukkitRunnable() {
             double distance = 0.0;
@@ -127,9 +129,9 @@ public final class GlacialShards extends IceAbility implements AddonAbility {
                     this.cancel();
                 } else {
                     armorStand.setVelocity(velocity);
-                    static_player.getWorld().spawnParticle(Particle.BLOCK_DUST, armorStand.getLocation(), 3, Material.PACKED_ICE.createBlockData());
+                    player.getWorld().spawnParticle(Particle.BLOCK_DUST, armorStand.getLocation(), 3, Material.PACKED_ICE.createBlockData());
                     if (ThreadLocalRandom.current().nextInt(2) == 0) {
-                        static_player.getWorld().spawnParticle(Particle.END_ROD, armorStand.getLocation(), 1, .3, .3, .3, .0);
+                        player.getWorld().spawnParticle(Particle.END_ROD, armorStand.getLocation(), 1, .3, .3, .3, .0);
                     }
                     checkCollision(armorStand);
                 }
@@ -139,16 +141,16 @@ public final class GlacialShards extends IceAbility implements AddonAbility {
         task.runTaskTimer(ProjectKorra.plugin, 0, 1);
         currentArmorStandIndex++;
         if (currentArmorStandIndex == 3) {
-            bendingPlayer.addCooldown(CoreAbility.getAbility(GlacialShards.class));
-            removeAll();
+            bPlayer.addCooldown(this);
+            remove();
         }
     }
 
-    private static void checkCollision(ArmorStand armorStand) {
+    private void checkCollision(ArmorStand armorStand) {
         for (Entity entity : GeneralMethods.getEntitiesAroundPoint(armorStand.getLocation(), 1)) {
             if (!(entity instanceof ArmorStand) && entity instanceof LivingEntity) {
-                if (entity.getUniqueId() != static_player.getUniqueId() && !damagedentities.contains(entity)) {
-                    DamageHandler.damageEntity(entity, static_player, damage, CoreAbility.getAbility(GlacialShards.class));
+                if (entity.getUniqueId() != player.getUniqueId() && !damagedentities.contains(entity)) {
+                    DamageHandler.damageEntity(entity, player, damage, CoreAbility.getAbility(GlacialShards.class));
                     entity.setFreezeTicks(freezeTics);
                     damagedentities.add(entity);
                     iceHit(entity.getLocation());
@@ -160,7 +162,7 @@ public final class GlacialShards extends IceAbility implements AddonAbility {
 
     }
 
-    private static void iceHit(Location location) {
+    private void iceHit(Location location) {
         for (Block block : GeneralMethods.getBlocksAroundPoint(location, 1.5)) {
             new TempBlock(block, Material.ICE.createBlockData(), 500);
         }
@@ -175,13 +177,17 @@ public final class GlacialShards extends IceAbility implements AddonAbility {
             return;
         }
 
+        for (ArmorStand armorStand : armorStands) {
+            armorStand.setInvulnerable(true);
+        }
+
         Location location = player.getLocation();
 
         for (double i = 0; i < 360 ; i+= 5) {
             double x = Math.cos(Math.toRadians(i));
             double z = Math.sin(Math.toRadians(i));
             Location particleLocation = location.clone().add(x * 1.5, 1, z * 1.5);
-            if (ThreadLocalRandom.current().nextInt(10) == 0) {
+            if (ThreadLocalRandom.current().nextInt(12) == 0) {
                 player.getWorld().spawnParticle(Particle.SNOW_SHOVEL, particleLocation, 2, .1, .1, .1);
                 if (color != null) {
                     GeneralMethods.displayColoredParticle(color, particleLocation, 1, .2, .2, .2);
@@ -196,16 +202,21 @@ public final class GlacialShards extends IceAbility implements AddonAbility {
             }
         }
 
+        for (Location circle : GeneralMethods.getCircle(player.getLocation().add(0, 5, 0), 5, 2, false, false, 0)) {
+            player.getWorld().spawnParticle(Particle.WHITE_ASH, circle, 1, .2, .2, .2, .05);
+
+
+        }
         rotateArmorStands();
     }
 
     private void rotateArmorStands() {
-        double angleOffset = (2 * Math.PI) / armorStands.length;
+        double angleOffset = (2 * Math.PI) / armorStandPlayerHashMap.get(player).length;
         double rotationAngle = angle + Math.PI;
         Location eyeLocation = player.getEyeLocation();
         Location centerLocation = eyeLocation.clone();
 
-        for (int i = 0; i < armorStands.length; i++) {
+        for (int i = 0; i < armorStandPlayerHashMap.get(player).length; i++) {
             ArmorStand armorStand = armorStands[i];
 
             if (armorStand != null) {
@@ -215,7 +226,7 @@ public final class GlacialShards extends IceAbility implements AddonAbility {
 
                 armorStand.teleport(newLocation);
             }
-            angle += Math.PI / 30.0;
+            angle += Math.PI / 40;
             if (angle >= 2 * Math.PI) {
                 angle = 0.0;
             }
@@ -224,7 +235,7 @@ public final class GlacialShards extends IceAbility implements AddonAbility {
 
     @Override
     public void remove() {
-        for (ArmorStand stand : armorStands) {
+        for (ArmorStand stand : armorStandPlayerHashMap.get(player)) {
             if (stand != null) {
                 stand.remove();
             }

@@ -39,6 +39,15 @@ public class ConfigManager  {
         config.addDefault(path + "Color", "#f6f6db");
         config.addDefault(path + "sourceRange", 6);
 
+        path = "Abilities.Ice.IceDisc.";
+        config.addDefault(path + "Duration", 5000);
+        config.addDefault(path + "Cooldown", 5000);
+        config.addDefault(path + "Damage", 3);
+        config.addDefault(path + "Speed", 0.8);
+        config.addDefault(path + "Range", 20);
+        config.addDefault(path + "freezeTics", 50);
+
+
 
         config.options().copyDefaults(true);
         Plugin.getPlugin().saveConfig();
