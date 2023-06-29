@@ -178,8 +178,9 @@ public final class GlacialShards extends IceAbility implements AddonAbility {
         }
 
         for (ArmorStand armorStand : armorStands) {
+            if (armorStand != null) {
             armorStand.setInvulnerable(true);
-        }
+        }}
 
         Location location = player.getLocation();
 

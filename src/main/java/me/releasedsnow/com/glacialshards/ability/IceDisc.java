@@ -2,7 +2,6 @@ package me.releasedsnow.com.glacialshards.ability;
 
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
-import com.projectkorra.projectkorra.ability.CoreAbility;
 import com.projectkorra.projectkorra.ability.IceAbility;
 import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.TempBlock;
@@ -106,22 +105,25 @@ public class IceDisc extends IceAbility implements AddonAbility {
             Location circle = center.clone().add(x * 0.5, 0, z * 0.5);
             player.getWorld().spawnParticle(Particle.BLOCK_DUST, circle, 1, Material.ICE.createBlockData());
             GeneralMethods.displayColoredParticle("#b6e3ee", circle, 1, .05, .05, .05);
+
         }
         if (distanceTravelled / Speed >= Range) {
             remove();
             return;
         }
+
         distanceTravelled ++;
         direction = player.getEyeLocation().getDirection();
         center.add(direction.multiply(Speed));
         player.getWorld().playSound(player.getLocation(), Sound.BLOCK_SNOW_BREAK, 2, 2);
         checkCollisions(center);
     }
+
     public void checkCollisions(Location location) {
         for (Entity entity : GeneralMethods.getEntitiesAroundPoint(location, 1)) {
             if (!(entity instanceof ArmorStand) && entity instanceof LivingEntity) {
                 if (entity.getUniqueId() != player.getUniqueId() && !damageEntity.contains(entity)) {
-                    DamageHandler.damageEntity(entity, player, Damage, CoreAbility.getAbility(GlacialShards.class));
+                    DamageHandler.damageEntity(entity, player, Damage, this);
                     entity.setFreezeTicks(freezeTics);
                     entity.getWorld().playSound(entity.getLocation(), Sound.BLOCK_GLASS_BREAK, 3, 3);
                     damageEntity.add(entity);
@@ -170,6 +172,16 @@ public class IceDisc extends IceAbility implements AddonAbility {
     }
     @Override
     public String getVersion() {
-        return null;
+        return "1.0.0";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Create a block of solid ice and throw sharp discs of ice through the air at your enemies.";
+    }
+
+    @Override
+    public String getInstructions() {
+        return "Tap sneak at an ice-bendable block, and once the ice has appeared click it to shoot a disc of ice.";
     }
 }

@@ -14,6 +14,7 @@ public class ConfigManager  {
 
     public static FileConfiguration config = Plugin.getPlugin().getConfig();
     public ConfigManager() {
+        this.deathMessages();
         this.defaults();
 
 
@@ -24,6 +25,11 @@ public class ConfigManager  {
     }
 
 
+    private void deathMessages() {
+        com.projectkorra.projectkorra.configuration.ConfigManager.languageConfig.get().addDefault("Abilities.Ice.GlacialShards.DeathMessage", "{victim} was frozen to death by {attacker}'s {ability}");
+        com.projectkorra.projectkorra.configuration.ConfigManager.languageConfig.get().addDefault("Abilities.Ice.IceDisc.DeathMessage", "{victim} was frozen to death by {attacker}'s {ability}");
+
+    }
 
 
     public void defaults(){
