@@ -1,4 +1,4 @@
-package me.releasedsnow.com.glacialshards.ability;
+package me.releasedsnow.com.hackathon.ability;
 
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ProjectKorra;
@@ -8,7 +8,7 @@ import com.projectkorra.projectkorra.ability.IceAbility;
 
 import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.TempBlock;
-import me.releasedsnow.com.glacialshards.ConfigManager;
+import me.releasedsnow.com.hackathon.ConfigManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;

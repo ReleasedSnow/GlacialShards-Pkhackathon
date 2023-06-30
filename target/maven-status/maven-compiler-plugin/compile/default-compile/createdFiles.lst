@@ -1,8 +1,8 @@
-me\releasedsnow\com\glacialshards\ability\AbilityListener.class
-me\releasedsnow\com\glacialshards\ability\IceDisc.class
-me\releasedsnow\com\glacialshards\ability\GlacialShards.class
-me\releasedsnow\com\glacialshards\ConfigManager.class
-me\releasedsnow\com\glacialshards\Plugin.class
-me\releasedsnow\com\glacialshards\ability\IceDisc$State.class
-me\releasedsnow\com\glacialshards\ability\IceDisc$1.class
-me\releasedsnow\com\glacialshards\ability\GlacialShards$1.class
+me\releasedsnow\com\hackathon\ability\GlacialShards.class
+me\releasedsnow\com\hackathon\ability\IceDisc$1.class
+me\releasedsnow\com\hackathon\ability\GlacialShards$1.class
+me\releasedsnow\com\hackathon\ability\IceDisc.class
+me\releasedsnow\com\hackathon\Plugin.class
+me\releasedsnow\com\hackathon\ConfigManager.class
+me\releasedsnow\com\hackathon\ability\IceDisc$State.class
+me\releasedsnow\com\hackathon\ability\AbilityListener.class
