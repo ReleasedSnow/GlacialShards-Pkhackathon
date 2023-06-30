@@ -14,7 +14,7 @@ public class Plugin extends JavaPlugin {
     public void onEnable() {
         plugin = this;
         new ConfigManager();
-        CoreAbility.registerPluginAbilities(plugin, "me.releasedsnow.com.glacialshards.ability");
+        CoreAbility.registerPluginAbilities(plugin, "me.releasedsnow.com.hackathon.ability");
         ProjectKorra.plugin.getServer().getPluginManager().registerEvents(new AbilityListener(), plugin);
         System.out.println("GlacialShards plugin has started");
 
