@@ -1,0 +1,6 @@
+name: Hackathon
+version: '1.0'
+main: me.releasedsnow.com.hackathon.Plugin
+api-version: 1.19
+depend:
+  - ProjectKorra
