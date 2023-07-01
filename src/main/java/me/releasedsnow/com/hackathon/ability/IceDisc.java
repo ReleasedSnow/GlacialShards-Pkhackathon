@@ -130,7 +130,6 @@ public class IceDisc extends IceAbility implements AddonAbility {
                     remove();
                     return;
                 }}}
-
     }
     @Override
     public void remove() {

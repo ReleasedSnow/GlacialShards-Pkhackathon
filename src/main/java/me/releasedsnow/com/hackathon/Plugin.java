@@ -2,7 +2,6 @@ package me.releasedsnow.com.hackathon;
 
 import com.projectkorra.projectkorra.ProjectKorra;
 import com.projectkorra.projectkorra.ability.CoreAbility;
-import me.releasedsnow.com.hackathon.ability.AbilityListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 

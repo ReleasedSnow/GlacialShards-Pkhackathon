@@ -1,8 +1,10 @@
-package me.releasedsnow.com.hackathon.ability;
+package me.releasedsnow.com.hackathon;
 
 import com.projectkorra.projectkorra.BendingPlayer;
 import com.projectkorra.projectkorra.ability.CoreAbility;
 
+import me.releasedsnow.com.hackathon.ability.GlacialShards;
+import me.releasedsnow.com.hackathon.ability.IceDisc;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
